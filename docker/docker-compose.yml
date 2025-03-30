@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  taxdown-db:
+    extends:
+      file: docker-compose.base.yml
+      service: taxdown-db
+
+  taxdown-mongo:
+    extends:
+      file: docker-compose.base.yml
+      service: taxdown-mongo
+
+  taxdown-api:
+    container_name: taxdown-api
+    build:
+      context: ..
+      dockerfile: dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@taxdown-db:5432/${POSTGRES_DB:-taxdown-db}?schema=public
+      - MONGODB_URI=mongodb://taxdown-mongo:27017/taxdown-events
+      - NODE_ENV=development
+      - PORT=3000
+    depends_on:
+      - taxdown-db
+      - taxdown-mongo
+    volumes:
+      - ../src:/app/src
+      - ../prisma:/app/prisma
+    restart: always
