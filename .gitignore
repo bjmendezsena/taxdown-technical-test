@@ -12,8 +12,11 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
+# Database
 postgres/
 mongo/
+mongodb/
+*.mongodb
 # OS
 .DS_Store
 .vscode
