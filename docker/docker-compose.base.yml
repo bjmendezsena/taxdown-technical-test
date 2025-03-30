@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  taxdown-db:
+    container_name: taxdown-db
+    image: postgres:16-alpine
+    platform: linux/arm64
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DB:-taxdown-db}
+
+  taxdown-mongo:
+    container_name: taxdown-mongo
+    image: mongo:6
+    restart: always
+    volumes:
+      - ./mongo:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=taxdown-events
+
+volumes:
+  postgres:
+  mongo:
