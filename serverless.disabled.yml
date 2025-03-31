@@ -1,0 +1,55 @@
+service: taxdown-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    NODE_ENV: ${opt:stage, 'dev'}
+    DATABASE_URL: ${env:DATABASE_URL}
+    MONGODB_URI: ${env:MONGODB_URI}
+
+plugins:
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  main:
+    handler: src/lambda.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
+
+custom:
+  serverlessOffline:
+    httpPort: 3000
+    noPrependStageInUrl: true
+
+  dotenv:
+    path: .env
+
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    external:
+      - '@nestjs/websockets'
+      - '@nestjs/microservices'
+      - '@nestjs/platform-express'
+      - 'class-transformer'
+      - 'class-validator'
+      - 'ejs'
+      - 'jqtpl'
+      - 'templayed'
+      - 'babel-core'
+      - 'slm'
+    target: 'node18'
+    platform: 'node'
+    define:
+      'process.env.NODE_ENV': '"development"'
+    concurrency: 10

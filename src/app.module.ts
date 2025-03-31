@@ -7,7 +7,7 @@ import { envs } from 'config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(envs.MONGO_URI),
+    MongooseModule.forRoot(envs.MONGODB_URI),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [() => envs],

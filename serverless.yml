@@ -1,0 +1,28 @@
+service: taxdown-api
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  environment:
+    NODE_ENV: ${opt:stage, 'development'}
+    DATABASE_URL: ${env:DATABASE_URL}
+    MONGODB_URI: ${env:MONGODB_URI}
+    PORT: ${env:PORT}
+    VERSION: ${env:VERSION}
+
+functions:
+  main:
+    handler: dist/src/serverless.handler
+    timeout: 60
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: "{proxy+}"

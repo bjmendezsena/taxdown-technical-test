@@ -160,6 +160,7 @@ export class CustomerController {
       content: {
         'application/json': {
           schema: {
+            required: ['credit'],
             type: 'object',
             properties: {
               credit: {
@@ -189,11 +190,11 @@ export class CustomerController {
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiResponse({ status: 409, description: 'Conflict' })
   addCreditcreate(
-    @Body() { credit }: AddCreditToCustomerCustomerDto,
+    @Body() dto: AddCreditToCustomerCustomerDto,
     @Param('id') id: string,
   ) {
     return this.addCreditToCustomerHandler.execute(
-      new AddCreditToCustomerCommand(id, credit),
+      new AddCreditToCustomerCommand(id, dto.credit),
     );
   }
 

@@ -4,7 +4,7 @@ import * as joi from 'joi';
 interface EnvVars {
   NODE_ENV: string;
   DATABASE_URL: string;
-  MONGO_URI: string;
+  MONGODB_URI: string;
   PORT: number;
   API_PREFIX: string;
   VERSION: string;
@@ -18,7 +18,7 @@ const envSchema = joi
       .default('development'),
     PORT: joi.number().default(3000),
     DATABASE_URL: joi.string().required(),
-    MONGO_URI: joi.string().required(),
+    MONGODB_URI: joi.string().required(),
     API_PREFIX: joi.string().default('api'),
     VERSION: joi.string().default('v1'),
   })
@@ -31,7 +31,6 @@ if (error) {
 }
 
 export const envs: Readonly<EnvVars> = envVars;
-
 export const isProduction = envs.NODE_ENV === 'production';
 
 export const isDevelopment = envs.NODE_ENV === 'development';

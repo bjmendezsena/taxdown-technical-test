@@ -1,7 +1,6 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import helmet from 'helmet';
 import {
@@ -10,15 +9,19 @@ import {
 } from '@/shared/domain';
 import { HttpExceptionFilter } from './exception.filter';
 import { envs, isProduction } from './envs';
+import { configureSwagger } from './swagger.config';
 
 export function configureApp(app: NestExpressApplication): void {
   const configService = app.get(ConfigService);
+  const logger = new Logger('ConfigApp');
 
+  logger.log('Configuring app...');
   app.setGlobalPrefix(`${envs.API_PREFIX}/${envs.VERSION}`);
   const { httpAdapter } = app.get(HttpAdapterHost);
+  logger.log('Configuring exception filters...');
 
-  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -34,6 +37,7 @@ export function configureApp(app: NestExpressApplication): void {
     }),
   );
 
+  logger.log('Configuring middlewares...');
   // Middleware de seguridad
   app.use(helmet());
 
@@ -45,31 +49,6 @@ export function configureApp(app: NestExpressApplication): void {
   });
 
   if (!isProduction) {
-    const config = new DocumentBuilder()
-      .setTitle(appConfig.swaggerConfig.title)
-      .setDescription(appConfig.swaggerConfig.description)
-      .setVersion(envs.VERSION)
-      .build();
-
-    const documentFactory = () => SwaggerModule.createDocument(app, config);
-
-    SwaggerModule.setup(appConfig.endpoint, app, documentFactory, {
-      customSiteTitle: appConfig.swaggerConfig.title,
-    });
-
-    // Deshabilitar CSP para Swagger UI
-    app.use(appConfig.endpoint, (req, res, next) => {
-      helmet({
-        contentSecurityPolicy: false,
-      })(req, res, next);
-    });
+    configureSwagger(app);
   }
 }
-
-export const appConfig = {
-  endpoint: `/${envs.API_PREFIX}/${envs.VERSION}/docs`,
-  swaggerConfig: {
-    title: 'Taxdawn Api Documentation',
-    description: 'This is the technical test of API documentation for Taxdawn',
-  },
-} as const;

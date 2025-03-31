@@ -5,7 +5,10 @@ export class Credit {
   public static readonly DECIMAL_CENTS = 100;
   private value: Decimal;
 
-  constructor(initialAmount: number = 0) {
+  constructor(initialAmount: number) {
+    if (initialAmount === undefined) {
+      throw new InvalidCreditException('Invalid amount');
+    }
     this.value = new Decimal(initialAmount);
     this.validateAmount(this.value);
   }
