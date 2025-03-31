@@ -151,7 +151,7 @@ export class CustomerController {
     );
   }
 
-  @Post(':id/add-credit')
+  @Post(':id/credits')
   @ApiOperation({
     summary: 'Add credit to customer',
     description: 'Add credit to customer based on the provided data.',
