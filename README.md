@@ -87,10 +87,10 @@ This will apply the schema and create the necessary tables in the PostgreSQL dat
 Use `serverless-offline` to emulate AWS Lambda locally:
 
 ```bash
-pnpm start:offline
-```
 
-> The `--noPrependStageInUrl` flag prevents serverless from prefixing `/dev` (or `/local`) in your local URLs.
+pnpm start:offline
+
+```
 
 ---
 
