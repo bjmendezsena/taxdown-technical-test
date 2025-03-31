@@ -27,7 +27,7 @@ Follow these steps to run the application locally with Docker and the Serverless
 ### 1. Clone the repository
 
 ```bash
-git clone https://URL_ADDRESS.com/your-username/taxdown-technical-test.git
+git clone https://github.com/bjmendezsena/taxdown-technical-test.git
 cd taxdown-technical-test
 ```
 
