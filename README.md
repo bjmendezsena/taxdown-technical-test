@@ -129,7 +129,7 @@ src/
 
 ## 🧑‍💻 Author
 
-> This technical test was developed by **[Your Name]** as part of the evaluation process for **TaxDown**.
+> This technical test was developed by **Briaulin Mendez Sena** as part of the evaluation process for **TaxDown**.
 
 ---
 
